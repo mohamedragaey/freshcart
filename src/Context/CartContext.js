@@ -1,72 +1,65 @@
-import { createContext, useEffect } from "react";
+import { createContext } from "react";
 import axios from 'axios'
 import CookiesStorageService from '../services/CookiesStorageService'
 
 const StorageService = CookiesStorageService.getService()
 const token = StorageService.getAccessToken()
 
+let headers = { headers: { 'token': token } }
 
-let headers = {headers: {'token': token}}
+export let cartContext = createContext();
 
-export let cartContext =  createContext();
+export default function CartContextProvider(props) {
+    const addToCart = (productID) => {
+        if (!!token) {
+            return axios.post(`https://ecommerce.routemisr.com/api/v1/cart`, { productId: productID }, headers)
+                .then((response) => response)
+                .catch((error) => error);
+        }
+    }
 
+    const getLoggedUserCart = () => {
+        if (!!token) {
+            return axios.get('https://ecommerce.routemisr.com/api/v1/cart', headers)
+                .then((response) => response)
+                .catch((error) => error)
+        }
+    }
 
-export default function CartContextProvider(props){
+    const removeFromCart = (id) => {
+        if (!!token) {
+            return axios.delete(`https://ecommerce.routemisr.com/api/v1/cart/${id}`, headers)
+                .then((response) => response)
+                .catch((error) => error)
+        }
+    }
 
-   
+    const updateCartQuantity = (id, count) => {
+        if (!!token) {
+            return axios.put(`https://ecommerce.routemisr.com/api/v1/cart/${id}`, { count: count }, headers)
+                .then((res) => res)
+                .catch((err) => err)
+        }
+    }
 
-//==== Function for Add Product to cart 
- function addToCart(productID) {
-  return  axios.post(`https://ecommerce.routemisr.com/api/v1/cart`,
-    {
-        productId:productID 
-    },
-    {
-        headers : headers
-    }).then( (response)=> response )
-    .catch( (error)=> error);
-}
+    const ClearUserCart = () => {
+        if (!!token) {
+            return axios.delete('https://ecommerce.routemisr.com/api/v1/cart', headers)
+                .then((response) => response)
+                .catch((error) => error)
+        }
+    }
 
-
-
-//==== Function  for get Cart and display 
-function getLoggedUserCart(){
-    return axios.get('https://ecommerce.routemisr.com/api/v1/cart' ,headers)
-    .then( (response)=> response )
-    .catch( (error)=> error )
-  }
-
-//==== Function to remove product from cart 
-function removeFromCart(id){
-    return axios.delete(`https://ecommerce.routemisr.com/api/v1/cart/${id}`,{
-        headers:headers
-    }).then( (response)=> response)
-    .catch( (error)=> error)
-}  
-
-//==== Function to update Cart Product Quantity
-function updateCartQuantity(id , count){
-    return axios.put(`https://ecommerce.routemisr.com/api/v1/cart/${id}` ,{
-        count:count
-    } ,{
-        headers:headers
-    } ).then((res)=> res )
-    .catch( (err)=> err )
-}
-
-
-
-//==== Function  for  Clear Cart
-function ClearUserCart(){
-    return axios.delete('https://ecommerce.routemisr.com/api/v1/cart' ,{
-
-       headers : headers
-
-    }).then( (response)=> response )
-    .catch( (error)=> error )
-  }
-
-    return <cartContext.Provider value={{addToCart , getLoggedUserCart , removeFromCart , updateCartQuantity , ClearUserCart }}> 
-        {props.children}
-    </cartContext.Provider>
+    return (
+        <cartContext.Provider
+            value={{
+                addToCart,
+                getLoggedUserCart,
+                removeFromCart,
+                updateCartQuantity,
+                ClearUserCart
+            }}>
+            {props.children}
+        </cartContext.Provider>
+    )
 }

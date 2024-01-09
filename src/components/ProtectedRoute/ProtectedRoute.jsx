@@ -1,30 +1,10 @@
-import React, { useContext } from 'react'
-import Style from './ProtectedRoute.module.css'
+import React from 'react'
 import { Navigate } from "react-router-dom";
-import { userContext } from '../../Context/UserContext';
+import CookiesStorageService from '../../services/CookiesStorageService';
+
+const StorageService = CookiesStorageService.getService()
+const token = StorageService.getAccessToken()
 
 export default function ProtectedRoute(props) {
-//==================== way of using localstorage
-
-  // if(localStorage.getItem('userToken') !== null ){
-  //   return props.children
-  // }
-  // else{
-
-  //   return <Navigate to="/login" />
-  // }
-
- // ========== way of using usecontext
-
- let {userToken} = useContext(userContext);
-
- if( userToken !== null ){
-    return props.children
- }
- else{
-    return <Navigate to="/login" />
-  }
-
-
- 
+  return !!token ? props.children : <Navigate to="/login" />
 }
