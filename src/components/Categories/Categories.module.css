@@ -1,0 +1,11 @@
+.category{
+    background-color: #F2F2F2!important;
+    padding-bottom: 1rem;
+}
+.category h5{
+    font-weight: bold;
+    margin-top: 1rem;
+}
+.category span{
+    display: block;
+}
