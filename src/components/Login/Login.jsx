@@ -18,20 +18,20 @@ export default function Login() {
   let [error, seterror] = useState(null);
   const [isloading, setLoading] = useState(false);
 
-  async function LoginSubmit(values) {
+  const LoginSubmit = (values) => {
     setLoading(true);
-    let { data } = await axios.post(`https://ecommerce.routemisr.com/api/v1/auth/signin`, values)
+    axios.post(`https://ecommerce.routemisr.com/api/v1/auth/signin`, values)
+      .then((result) => {
+        console.log(result.data)
+        StorageService.setToken(result?.data?.token)
+        setLoading(false)
+        setUserToken(result?.data?.token)
+        navgate('/')
+      })
       .catch((error) => {
         setLoading(false)
         seterror(error.response.data.message)
       })
-
-    if (data.message === 'success') {
-      setLoading(false)
-      StorageService.setToken(data.token)
-      setUserToken(data.token)
-      navgate('/')
-    }
   }
 
   let formik = useFormik({
