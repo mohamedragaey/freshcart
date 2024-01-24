@@ -9,14 +9,14 @@ export default function Layout() {
   return (
     <>
       <Navbar />
-      <Outlet />
-      <div>
-        <Offline>
-          <div className='network'>
-            <i className="fa-solid fa-wifi"></i> You are Offline
-          </div>
-        </Offline>
-      </div>
+      <main className="flex-fill">
+        <Outlet />
+      </main>
+      <Offline>
+        <div className='network'>
+          <i className="fa-solid fa-wifi"></i> You are Offline
+        </div>
+      </Offline>
       <Footer />
     </>
   )
