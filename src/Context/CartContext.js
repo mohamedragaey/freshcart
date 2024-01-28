@@ -7,9 +7,9 @@ const token = StorageService.getAccessToken()
 
 let headers = { headers: { 'token': token } }
 
-export let cartContext = createContext();
+const cartContext = createContext({});
 
-export default function CartContextProvider(props) {
+const CartContextProvider = ({ children }) => {
     let [loading, setLoading] = useState(false)
     let [cartDetails, setCartDeatils] = useState(null)
     let [totalPrice, setTotalPrice] = useState(null)
@@ -101,7 +101,9 @@ export default function CartContextProvider(props) {
                 totalPrice,
                 errorMessage,
             }}>
-            {props.children}
+            {children}
         </cartContext.Provider>
     )
 }
+
+export { CartContextProvider, cartContext }

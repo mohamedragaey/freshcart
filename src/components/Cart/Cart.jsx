@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { cartContext } from '../../Context/CartContext'
 import { BallTriangle } from 'react-loader-spinner'
 
 export default function Cart() {
 
-  let {
-    getLoggedUserCart,
+  const {
     removeFromCart,
     updateCartQuantity,
     ClearUserCart,
@@ -15,13 +14,9 @@ export default function Cart() {
     errorMessage,
   } = useContext(cartContext);
 
-  useEffect(() => {
-    getLoggedUserCart()
-  }, [])
-
   return (
     <>
-      {!!loading &&
+      {loading &&
         <div className='d-flex justify-content-center align-items-center'>
           <BallTriangle
             height={100}
@@ -69,9 +64,6 @@ export default function Cart() {
             </div>
 
           </div>)}
-
-
-
         </div>
       }
     </>

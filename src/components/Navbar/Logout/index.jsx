@@ -1,16 +1,8 @@
-import React from 'react'
-import { useNavigate } from "react-router-dom";
-import CookiesStorageService from '../../../services/CookiesStorageService';
-
-const StorageService = CookiesStorageService.getService()
+import React, { useContext } from 'react'
+import { userContext } from '../../../Context/UserContext';
 
 const Logout = () => {
-    let navigate = useNavigate()
-
-    const logout = () => {
-        StorageService.clearToken();
-        navigate('/Login');
-    }
+    const { logout } = useContext(userContext);
 
     return (
         <button className="nav-link" aria-current="page" onClick={() => logout()}>

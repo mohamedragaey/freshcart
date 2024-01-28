@@ -1,10 +1,13 @@
-import React from 'react'
-import { Navigate } from "react-router-dom";
-import CookiesStorageService from '../../services/CookiesStorageService';
+import React, { useContext } from 'react'
+import { Navigate, Outlet } from "react-router-dom";
+import { userContext } from '../../Context/UserContext';
 
-const StorageService = CookiesStorageService.getService()
-const token = StorageService.getAccessToken()
+export default function ProtectedRoute() {
+  const { isUserAuth } = useContext(userContext);
 
-export default function ProtectedRoute(props) {
-  return !!token ? props.children : <Navigate to="/login" />
+  if (!!isUserAuth) {
+    return <Outlet />
+  } else {
+    return <Navigate to="/login" replace="true" />
+  }
 }

@@ -1,15 +1,13 @@
-import React from 'react'
-import CookiesStorageService from '../../services/CookiesStorageService';
+import React, { useContext } from 'react'
 import Logout from './Logout';
 import SocialMediaLinks from './SocialMediaLinks';
 import NavbarMenu from './NavbarMenu';
 import AuthMenuLinks from './AuthMenuLinks';
 import Logo from './Logo';
-
-const StorageService = CookiesStorageService.getService()
+import { userContext } from '../../Context/UserContext';
 
 export default function Navbar() {
-  let userToken = StorageService.getAccessToken()
+  const { isUserAuth } = useContext(userContext);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -19,10 +17,10 @@ export default function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          {!!userToken && <NavbarMenu />}
+          {!!isUserAuth && <NavbarMenu />}
           <SocialMediaLinks />
-          {!!userToken && <Logout />}
-          {!userToken && <AuthMenuLinks />}
+          {!!isUserAuth && <Logout />}
+          {!isUserAuth && <AuthMenuLinks />}
         </div>
       </div>
     </nav>
