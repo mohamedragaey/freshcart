@@ -21,7 +21,6 @@ const UserContextProvider = ({ children }) => {
         setLoading(true);
         axios.post(`https://ecommerce.routemisr.com/api/v1/auth/signin`, values)
             .then((result) => {
-                console.log('Login result..', result.data)
                 setIsUserAuth(true)
                 StorageService.setToken(result?.data?.token).then(() => {
                     setLoading(false)

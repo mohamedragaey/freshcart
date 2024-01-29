@@ -1,6 +1,7 @@
 import React, { createContext, useState } from "react";
 import axios from 'axios'
 import CookiesStorageService from '../services/CookiesStorageService'
+import toast from "react-hot-toast";
 
 const StorageService = CookiesStorageService.getService()
 const token = StorageService.getAccessToken()
@@ -10,16 +11,46 @@ let headers = { headers: { 'token': token } }
 const cartContext = createContext({});
 
 const CartContextProvider = ({ children }) => {
-    let [loading, setLoading] = useState(false)
-    let [cartDetails, setCartDeatils] = useState(null)
-    let [totalPrice, setTotalPrice] = useState(null)
-    let [errorMessage, setErrorMessage] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [cartDetails, setCartDeatils] = useState(null)
+    const [totalPrice, setTotalPrice] = useState(null)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [productsList, setProductsList] = useState([])
+
+    const getAllProducts = () => {
+        setLoading(true);
+        return axios.get(`https://ecommerce.routemisr.com/api/v1/products`)
+            .then((response) => {
+                setProductsList(response?.data?.data)
+                setLoading(false);
+            })
+            .catch((error) => {
+                setLoading(false);
+                setErrorMessage(error?.response?.data?.message)
+            });
+    }
+
+    React.useEffect(() => {
+        getAllProducts();
+    }, [])
 
     const addToCart = (productID) => {
         if (!!token) {
             return axios.post(`https://ecommerce.routemisr.com/api/v1/cart`, { productId: productID }, headers)
-                .then((response) => response)
-                .catch((error) => error);
+                .then((response) => {
+                    if (response.data?.status === "success") {
+                        toast.success('Product Added Successfully', {
+                            duration: 3000,
+                            position: 'top-center',
+                        });
+                    }
+                })
+                .catch((error) => {
+                    toast.error(`Please Try Again: ${error}`, {
+                        duration: 3000,
+                        position: 'top-center',
+                    });
+                });
         }
     }
 
@@ -100,6 +131,7 @@ const CartContextProvider = ({ children }) => {
                 cartDetails,
                 totalPrice,
                 errorMessage,
+                productsList
             }}>
             {children}
         </cartContext.Provider>

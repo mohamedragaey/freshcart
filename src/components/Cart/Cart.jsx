@@ -5,6 +5,7 @@ import { BallTriangle } from 'react-loader-spinner'
 export default function Cart() {
 
   const {
+    getLoggedUserCart,
     removeFromCart,
     updateCartQuantity,
     ClearUserCart,
@@ -14,6 +15,9 @@ export default function Cart() {
     errorMessage,
   } = useContext(cartContext);
 
+  React.useEffect(() => {
+    getLoggedUserCart();
+  }, [])
   return (
     <>
       {loading &&

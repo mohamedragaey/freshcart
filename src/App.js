@@ -13,10 +13,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <UserContextProvider>
-        <RouterProvider router={router} >
-          <CartContextProvider />
+        <CartContextProvider >
+          <RouterProvider router={router} />
           <Toaster />
-        </RouterProvider>
+        </CartContextProvider>
       </UserContextProvider>
     </QueryClientProvider>
   )
